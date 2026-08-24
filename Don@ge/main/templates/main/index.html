@@ -1,17 +1,78 @@
-<!DOCTYPE html>
+    {% load static %}
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title>Donages</title>
-</head>
-<body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Donage | Streamline Your Business Operations</title>
+        <link rel="stylesheet" href="{% static 'main/style.css' %}">
+    </head>
+    <body>
+        <!-- Top Navigation -->
+        <header>
+            <div class="logo">Donage<span>.</span></div>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#solutions">Solutions</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#" class="btn-nav">Start Free Trial</a>
+            </nav>
+        </header>
 
-    <h1>Donage</h1>
+        <!-- Main Hero Header -->
+        <section class="hero">
+            <div class="hero-container">
+                <span class="badge">New: Version 1.0 Suite Live</span>
+                <h1>Manage your entire business operations in one single platform.</h1>
+                <p>Donage unifies workflows, automates routine task scheduling, and delivers real-time performance analytics for growing modern enterprises.</p>
+                <div class="cta-group">
+                    <a href="#" class="btn-primary">Get Started Free</a>
+                    <a href="#" class="btn-secondary">Tutorials</a>
+                </div>
+            </div>
+        </section>
 
-    <p>Welcome to this site</p>
+        <!-- Business Metrics Counter Section -->
+        <section class="metrics">
+            <div class="metric-item">
+                <h2>99.9%</h2>
+                <p>Platform Uptime</p>
+            </div>
+            <div class="metric-item">
+                <h2>14 Days</h2>
+                <p>Average Onboarding Time</p>
+            </div>
+            <div class="metric-item">
+                <h2>25%</h2>
+                <p>Efficiency Increase</p>
+            </div>
+        </section>
 
-    <button>Test Button</button>
-
-</body>
+        <!-- Core Core Features Grid -->
+        <section id="features" class="features">
+            <div class="section-title">
+                <span>Core Core Features</span>
+                <h2>Everything you need to scale operations</h2>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <div class="icon"></div>
+                    <h3>Advanced Analytics</h3>
+                    <p>Track team efficiency and revenue streams via live dashboard updates.</p>
+                </div>
+                <div class="card">
+                    <div class="icon"></div>
+                    <h3>Process Automation</h3>
+                    <p>Eliminate human error by automating repetitive invoices and report updates.</p>
+                </div>
+                <div class="card">
+                    <div class="icon"></div>
+                    <h3>Enterprise Security</h3>
+                    <p>Protect your intellectual property with modern bank-grade encryption layers.</p>
+                </div>
+            </div>
+        </section>
+    </body>
 </html>
+
