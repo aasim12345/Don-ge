@@ -17,6 +17,28 @@
                 <a href="#solutions">Solutions</a>
                 <a href="#pricing">Pricing</a>
                 <a href="#" class="btn-nav">Start Free Trial</a>
+
+                {% if user.is_authenticated %}
+
+                <span class="welcome-user">
+                    Hi, {{ user.username }}
+                </span>
+
+                <a href="{% url 'logout' %}" class="btn-nav">
+                    Logout
+                </a>
+
+                {% else %}
+
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+
+                <a href="{% url 'signup' %}" class="btn-nav">
+                    Sign Up
+                </a>
+
+                {% endif %}
             </nav>
         </header>
 

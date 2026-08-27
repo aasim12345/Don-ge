@@ -56,14 +56,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="main\static\main\style.css" />
+    <Content Include="main\templates\main\signup.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
-    <Content Include="main\templates\main\about.html" />
-    <Content Include="main\templates\main\contact.html" />
     <Content Include="main\templates\main\index.html" />
-    <Content Include="main\templates\main\layout.html" />
     <Content Include="main\templates\main\login.html" />
-    <Content Include="main\templates\main\loginpartial.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.html">
