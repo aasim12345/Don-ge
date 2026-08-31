@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     return render(request, 'main/index.html')
@@ -45,3 +46,8 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+@login_required
+def tasks(request):
+    return render(request, 'main/tasks.html')
+

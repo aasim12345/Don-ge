@@ -13,12 +13,14 @@
         <header>
             <div class="logo">Donage<span>.</span></div>
             <nav>
-                <a href="#features">Features</a>
-                <a href="#solutions">Solutions</a>
+                <a href="#features">Inventory</a>
+                <a href="#solutions">Marketing</a>
                 <a href="#pricing">Pricing</a>
                 <a href="#" class="btn-nav">Start Free Trial</a>
 
                 {% if user.is_authenticated %}
+                     
+                <a href="{% url 'tasks'%}">tasks</a>
 
                 <span class="welcome-user">
                     Hi, {{ user.username }}

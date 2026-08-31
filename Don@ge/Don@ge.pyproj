@@ -57,6 +57,7 @@
   <ItemGroup>
     <Content Include="main\static\main\style.css" />
     <Content Include="main\templates\main\signup.html" />
+    <Content Include="main\templates\main\tasks.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="main\templates\main\index.html" />

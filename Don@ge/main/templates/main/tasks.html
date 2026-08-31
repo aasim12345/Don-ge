@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks | Doange</title>
+
+    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            Doange<span>.</span>
+        </div>
+
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'tasks' %}">Tasks</a>
+            <a href="{% url 'logout' %}" class="btn-nav">Logout</a>
+        </nav>
+    </header>
+
+
+    <section class="tasks-page">
+
+        <h1>My Tasks</h1>
+
+        <button class="btn-primary">
+            + Add Task
+        </button>
+
+        <div class="task-list">
+
+            <div class="task-box">
+                <h3>Check Inventory</h3>
+                <p>Due: Today</p>
+            </div>
+
+            <div class="task-box">
+                <h3>Complete Sales Report</h3>
+                <p>Due: Friday</p>
+            </div>
+
+        </div>
+
+    </section>
+
+</body>
+</html>

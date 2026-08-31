@@ -333,3 +333,36 @@ nav {
 .welcome-user {
     font-weight: 600;
 }
+
+/* Tasks Page */
+
+.tasks-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+    .tasks-page h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+.task-list {
+    margin-top: 2rem;
+}
+
+.task-box {
+    background: white;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+    .task-box h3 {
+        margin-bottom: 0.5rem;
+    }
+
+    .task-box p {
+        color: var(--gray-text);
+    }
