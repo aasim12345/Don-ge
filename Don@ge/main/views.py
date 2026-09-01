@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from .models import Task
 
 def home(request):
     return render(request, 'main/index.html')
@@ -49,5 +50,49 @@ def logout_view(request):
 
 @login_required
 def tasks(request):
-    return render(request, 'main/tasks.html')
 
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        due_date = request.POST.get('due_date')
+
+        if title:
+            Task.objects.create(
+                user=request.user,
+                title=title,
+                description=description,
+                due_date=due_date if due_date else None
+            )
+
+        return redirect('tasks')
+
+    tasks = Task.objects.filter(user=request.user)
+
+    return render(request, 'main/tasks.html', {
+        'tasks': tasks
+    })
+@login_required
+def complete_task(request, task_id):
+
+    task = Task.objects.get(
+        id=task_id,
+        user=request.user
+    )
+
+    task.completed = not task.completed
+    task.save()
+
+    return redirect('tasks')
+
+
+@login_required
+def delete_task(request, task_id):
+
+    task = Task.objects.get(
+        id=task_id,
+        user=request.user
+    )
+
+    task.delete()
+
+    return redirect('tasks')

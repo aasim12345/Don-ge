@@ -13,10 +13,10 @@
         <header>
             <div class="logo">Donage<span>.</span></div>
             <nav>
-                <a href="#features">Inventory</a>
-                <a href="#solutions">Marketing</a>
-                <a href="#pricing">Pricing</a>
-                <a href="#" class="btn-nav">Start Free Trial</a>
+                <a href="{% url 'login'%}">Inventory</a>
+                <a href="{% url 'login'%}">Marketing</a>
+                <a href="{% url 'login'%}">Pricing</a>
+                <a href="{% url 'login'%}">Start Free Trial</a>
 
                 {% if user.is_authenticated %}
                      
@@ -51,8 +51,8 @@
                 <h1>Manage your entire business operations in one single platform.</h1>
                 <p>Donage unifies workflows, automates routine task scheduling, and delivers real-time performance analytics for growing modern enterprises.</p>
                 <div class="cta-group">
-                    <a href="#" class="btn-primary">Get Started Free</a>
-                    <a href="#" class="btn-secondary">Tutorials</a>
+                    <a href="{% url 'login'%}" class="btn-primary">Get Started Free</a>
+                    <a href="{% url 'login'%}" class="btn-secondary">Tutorials</a>
                 </div>
             </div>
         </section>
