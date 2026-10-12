@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .models import Task
+from django.shortcuts import get_object_or_404
+from .models import Task, Inventory
 
 def home(request):
     return render(request, 'main/index.html')
@@ -47,7 +48,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
-
+ 
 @login_required
 def tasks(request):
 
@@ -84,15 +85,74 @@ def complete_task(request, task_id):
 
     return redirect('tasks')
 
+@login_required
+def inventory(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        quantity = request.POST.get('quantity')
+        price = request.POST.get('price')
+        buy_link = request.POST.get('buy_link')
+
+        if name:
+            Inventory.objects.create(
+                user=request.user,
+                name=name,
+                quantity=quantity,
+                price=price,
+                buy_link=buy_link
+            )
+
+        return redirect('inventory')
+
+    items = Inventory.objects.filter(user=request.user)
+
+    return render(request, 'main/inventory.html', {
+        'items': items
+    })
+
+
+@login_required
+def update_inventory(request, item_id):
+    item = get_object_or_404(
+        Inventory,
+        id=item_id,
+        user=request.user
+    )
+
+    if request.method == 'POST':
+        quantity = request.POST.get('quantity')
+
+        if quantity and quantity.isdigit():
+            item.quantity = int(quantity)
+            item.save()
+
+    return redirect('inventory')
+
+
+@login_required
+def delete_inventory(request, item_id):
+    item = get_object_or_404(
+        Inventory,
+        id=item_id,
+        user=request.user
+    )
+
+    if request.method == 'POST':
+        item.delete()
+
+    return redirect('inventory')
 
 @login_required
 def delete_task(request, task_id):
-
-    task = Task.objects.get(
+    task = get_object_or_404(
+        Task,
         id=task_id,
         user=request.user
     )
 
-    task.delete()
+    if request.method == 'POST':
+        task.delete()
 
     return redirect('tasks')
+
+
