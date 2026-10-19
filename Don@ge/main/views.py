@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from .models import Task, Inventory
 
+
 def home(request):
     return render(request, 'main/index.html')
 def signup_view(request):
@@ -112,11 +113,44 @@ def inventory(request):
 
 
 @login_required
+def inventory(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        quantity = request.POST.get('quantity')
+        price = request.POST.get('price')
+        buy_link = request.POST.get('buy_link', '')
+
+        if name and quantity and price:
+            Inventory.objects.create(
+                user=request.user,
+                name=name,
+                quantity=quantity,
+                price=price,
+                buy_link=buy_link
+            )
+
+        return redirect('inventory')
+
+    items = Inventory.objects.filter(user=request.user)
+
+    total_items = items.count()
+    total_quantity = sum(item.quantity for item in items)
+    total_value = sum(item.quantity * item.price for item in items)
+    low_stock = sum(1 for item in items if item.quantity <= 5)
+
+    return render(request, 'main/inventory.html', {
+        'items': items,
+        'total_items': total_items,
+        'total_quantity': total_quantity,
+        'total_value': total_value,
+        'low_stock': low_stock,
+    })
+
+
+@login_required
 def update_inventory(request, item_id):
     item = get_object_or_404(
-        Inventory,
-        id=item_id,
-        user=request.user
+        Inventory, id=item_id, user=request.user
     )
 
     if request.method == 'POST':
@@ -127,6 +161,19 @@ def update_inventory(request, item_id):
             item.save()
 
     return redirect('inventory')
+
+
+@login_required
+def delete_inventory(request, item_id):
+    item = get_object_or_404(
+        Inventory, id=item_id, user=request.user
+    )
+
+    if request.method == 'POST':
+        item.delete()
+
+    return redirect('inventory')
+ 
 
 
 @login_required

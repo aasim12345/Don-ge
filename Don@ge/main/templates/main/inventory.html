@@ -3,66 +3,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory | Doange</title>
     <link rel="stylesheet" href="{% static 'main/style.css' %}">
 </head>
-<body>
+<body class="inventory-page">
+
     <header class="inventory-header">
         <a href="{% url 'home' %}" class="inventory-logo">
             Doange<span>.</span>
         </a>
 
-        <nav>
+        <nav class="inventory-nav">
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'tasks' %}">Tasks</a>
-            <a href="{% url 'logout' %}" class="inventory-logout">Logout</a>
+            <a href="{% url 'inventory' %}">Inventory</a>
+            <span>Hi, {{ user.username }}</span>
+            <a href="{% url 'logout' %}">Logout</a>
         </nav>
     </header>
 
-    <main class="inventory-page">
-        <h1>Inventory Management</h1>
-        <p class="inventory-welcome">
-            Welcome, {{ user.username }}
-        </p>
+    <main class="inventory-container">
 
-        <section class="inventory-form">
+        <h1>Inventory Management</h1>
+        <p>Manage your products, stock and shopping links.</p>
+
+        <div class="inventory-stats">
+            <div class="inventory-stat">
+                <h3>Total Items</h3>
+                <h2>{{ total_items }}</h2>
+            </div>
+
+            <div class="inventory-stat">
+                <h3>Total Quantity</h3>
+                <h2>{{ total_quantity }}</h2>
+            </div>
+
+            <div class="inventory-stat">
+                <h3>Total Value</h3>
+                <h2>${{ total_value|floatformat:2 }}</h2>
+            </div>
+
+            <div class="inventory-stat">
+                <h3>Low Stock Items</h3>
+                <h2>{{ low_stock }}</h2>
+            </div>
+        </div>
+
+        <section class="inventory-panel">
             <h2>Add New Item</h2>
 
-            <form method="POST">
+            <form method="POST" class="inventory-form">
                 {% csrf_token %}
 
-                <label>Item Name</label>
                 <input type="text" name="name"
-                       placeholder="Enter item name" required>
+                       placeholder="Item name" required>
 
-                <label>Quantity</label>
                 <input type="number" name="quantity"
-                       placeholder="Enter quantity"
-                       min="0" required>
+                       placeholder="Quantity" min="0" required>
 
-                <label>Price ($)</label>
                 <input type="number" name="price"
-                       placeholder="Enter price"
-                       min="0" step="0.01" required>
+                       placeholder="Price ($)" min="0"
+                       step="0.01" required>
 
-                <label>Shopping Website Link (Optional)</label>
                 <input type="url" name="buy_link"
-                       placeholder="https://example.com">
+                       placeholder="Shopping website link">
 
-                <button type="submit" class="inventory-add">
-                    + Add Item
-                </button>
+                <button type="submit">Add Item</button>
             </form>
         </section>
 
-        <section class="inventory-list">
-            <div class="inventory-list-heading">
-                <h2>Your Inventory</h2>
-                <input type="search" id="inventory-search"
-                       placeholder="Search items..."
-                       oninput="searchInventory()">
-            </div>
+        <section class="inventory-panel">
+            <h2>Your Inventory</h2>
+
+            <input type="search" id="inventory-search"
+                   placeholder="Search items..."
+                   oninput="searchInventory()">
 
             <div class="inventory-table-wrap">
                 <table class="inventory-table">
@@ -70,20 +86,25 @@
                         <tr>
                             <th>Item Name</th>
                             <th>Quantity</th>
-                            <th>Price ($)</th>
+                            <th>Price</th>
                             <th>Shopping Link</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         {% for item in items %}
-                        <tr class="inventory-item">
+                        <tr class="inventory-row">
                             <td>{{ item.name }}</td>
                             <td>
-                                {{ item.quantity }}
-                                {% if item.quantity <= 5 %}
-                                <span class="inventory-low">Low Stock</span>
-                                {% endif %}
+                                <form method="POST"
+                                      action="{% url 'update_inventory' item.id %}">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantity"
+                                           value="{{ item.quantity }}"
+                                           min="0" required>
+                                    <button type="submit">Update</button>
+                                </form>
                             </td>
                             <td>${{ item.price }}</td>
                             <td>
@@ -91,30 +112,19 @@
                                 <a href="{{ item.buy_link }}"
                                    target="_blank"
                                    rel="noopener noreferrer">
-                                    Buy Item
+                                    View Link
                                 </a>
                                 {% else %}
-                                —
+                                No link
                                 {% endif %}
                             </td>
                             <td>
                                 <form method="POST"
-                                      action="{% url 'update_inventory' item.id %}"
-                                      class="inventory-action">
-                                    {% csrf_token %}
-                                    <input type="number"
-                                           name="quantity"
-                                           value="{{ item.quantity }}"
-                                           min="0" required>
-                                    <button type="submit">Update</button>
-                                </form>
-
-                                <form method="POST"
-                                      action="{% url 'delete_inventory' item.id %}"
-                                      class="inventory-action">
+                                      action="{% url 'delete_inventory' item.id %}">
                                     {% csrf_token %}
                                     <button type="submit"
-                                            class="inventory-delete">
+                                            class="inventory-delete"
+                                            onclick="return confirm('Delete this item?')">
                                         Delete
                                     </button>
                                 </form>
@@ -122,31 +132,28 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="inventory-empty">
-                                No inventory items added yet.
-                            </td>
+                            <td colspan="5">No inventory items added yet.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </section>
+
     </main>
 
     <script>
         function searchInventory() {
-            const search = document.getElementById(
-                "inventory-search"
-            ).value.toLowerCase();
+            const search = document.getElementById("inventory-search")
+                .value.toLowerCase();
 
-            document.querySelectorAll(
-                ".inventory-item"
-            ).forEach(function (row) {
-                const name = row.cells[0].textContent.toLowerCase();
-                row.style.display = name.includes(search) ? "" : "none";
+            document.querySelectorAll(".inventory-row").forEach(row => {
+                row.style.display = row.textContent.toLowerCase()
+                    .includes(search) ? "" : "none";
             });
         }
     </script>
+
 </body>
 </html>
 
