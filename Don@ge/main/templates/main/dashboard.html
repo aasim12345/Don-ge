@@ -1,0 +1,135 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Business Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{% static 'main/style.css' %}">
+</head>
+
+<body class="dashboard-page">
+
+    <header class="dashboard-header">
+
+        <h2>Donage.</h2>
+
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'inventory' %}">Inventory</a>
+            <a href="{% url 'tasks' %}">Schedule</a>
+
+            {% include 'main/notifications.html' %}
+
+            <form method="POST"
+                  action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+
+    </header>
+
+    <main class="dashboard-main">
+
+        <h1>Business Overview</h1>
+
+        <p>
+            Welcome back, {{ user.username }}!
+            Here's your business at a glance.
+        </p>
+
+        <!-- INVENTORY SUMMARY -->
+
+        <section class="dashboard-stats">
+
+            <div class="dashboard-card">
+                <h3>Inventory Items</h3>
+                <h2>{{ total_items }}</h2>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>Total Stock</h3>
+                <h2>{{ total_quantity }}</h2>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>Inventory Value</h3>
+                <h2>${{ total_value|floatformat:2 }}</h2>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>Low Stock</h3>
+                <h2>{{ low_stock }}</h2>
+            </div>
+
+        </section>
+
+        <!-- UPCOMING TASKS -->
+
+        <section class="dashboard-tasks">
+
+            <div class="dashboard-section-header">
+                <h2>Upcoming Tasks</h2>
+
+                <a href="{% url 'tasks' %}">
+                    View All Tasks
+                </a>
+            </div>
+
+            {% for task in upcoming_tasks %}
+
+            <div class="dashboard-task">
+
+                <div>
+                    <h3>{{ task.title }}</h3>
+
+                    <p>{{ task.description }}</p>
+                </div>
+
+                <div>
+                    {% if task.due_date < today %}
+                    <span class="dashboard-overdue">
+                        Overdue: {{ task.due_date }}
+                    </span>
+                    {% elif task.due_date == today %}
+                    <span class="dashboard-due-today">
+                        Due Today
+                    </span>
+                    {% else %}
+                    <span class="dashboard-due-date">
+                        Due: {{ task.due_date }}
+                    </span>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <p>No upcoming tasks.</p>
+
+            {% endfor %}
+
+        </section>
+
+        <!-- QUICK ACCESS -->
+
+        <section class="dashboard-links">
+
+            <a href="{% url 'inventory' %}">
+                Manage Inventory
+            </a>
+
+            <a href="{% url 'tasks' %}">
+                Manage Schedule
+            </a>
+
+
+        </section>
+
+    </main>
+
+</body>
+</html>

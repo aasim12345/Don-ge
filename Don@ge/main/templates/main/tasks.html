@@ -33,10 +33,14 @@
                 Home
             </a>
 
+            <a href="{% url 'inventory' %}">
+                inventory
+            </a>
+
             <a href="{% url 'tasks' %}">
                 Tasks
             </a>
-
+            <span>Hi, {{ user.username }}</span>
             <a href="{% url 'logout' %}"
                class="btn-nav">
                 Logout

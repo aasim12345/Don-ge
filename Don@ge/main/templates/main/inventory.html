@@ -20,10 +20,72 @@
             <a href="{% url 'inventory' %}">Inventory</a>
             <span>Hi, {{ user.username }}</span>
             <a href="{% url 'logout' %}">Logout</a>
+            <div class="notification-container">
+
+                <button type="button"
+                        class="notification-bell"
+                        onclick="toggleNotifications()">
+
+                    Notifications
+
+                    {% if notification_count > 0 %}
+                    <span class="notification-count">
+                        {{ notification_count }}
+                    </span>
+                    {% endif %}
+
+                </button>
+
+                <div id="notificationBox"
+                     class="notification-dropdown">
+
+                    <h3>Inventory Notifications</h3>
+
+                    {% for item in low_stock_items %}
+
+                    {% if item.quantity == 0 %}
+
+                    <div class="notification danger">
+                        {{ item.name }} is out of stock!
+                    </div>
+
+                    {% else %}
+
+                    <div class="notification warning">
+                        {{ item.name }} is running low.
+                        Only {{ item.quantity }} left.
+                    </div>
+
+                    {% endif %}
+
+                    {% empty %}
+
+                    <p>No stock warnings.</p>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
         </nav>
     </header>
 
     <main class="inventory-container">
+
+        {% if messages %}
+        <div class="inventory-messages">
+
+            {% for message in messages %}
+
+            <div class="inventory-message">
+                {{ message }}
+            </div>
+
+            {% endfor %}
+
+        </div>
+        {% endif %}
+
 
         <h1>Inventory Management</h1>
         <p>Manage your products, stock and shopping links.</p>
@@ -151,6 +213,17 @@
                 row.style.display = row.textContent.toLowerCase()
                     .includes(search) ? "" : "none";
             });
+        }
+    </script>
+    <script>
+        function toggleNotifications() {
+            var box = document.getElementById("notificationBox");
+
+            if (box.style.display === "block") {
+                box.style.display = "none";
+            } else {
+                box.style.display = "block";
+            }
         }
     </script>
 
